@@ -1,0 +1,18 @@
+POST http://localhost:3000/events
+Content-Type: application/json
+
+{
+  "title": "Node Event",
+  "details": "Programming event",
+  "maximumAttendees": 10
+}
+
+###
+
+POST http://localhost:3000/events/c17b493e-c8fc-48de-811f-78156f779b1e/attendees
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "johndoe@mail.com"
+}
