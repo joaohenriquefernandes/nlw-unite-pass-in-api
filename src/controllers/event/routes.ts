@@ -23,6 +23,9 @@ export async function eventRoutes(app: FastifyInstance) {
                 details: z.string().nullable(),
                 maximumAttendees: z.number().int().positive().nullable()
               })
+            }),
+            400: z.object({
+              message: z.string()
             })
           }
         },

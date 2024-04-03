@@ -26,7 +26,7 @@ export async function CreateController(request: FastifyRequest<ICreateController
     return reply.status(201).send({ event })
   } catch (error) {
     if(error instanceof EventAlreadyExistsError) {
-      return reply.status(40).send({ message: error.message })
+      return reply.status(400).send({ message: error.message })
     }
   }
 }

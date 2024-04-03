@@ -22,7 +22,7 @@ export class CreateEventService {
     const eventWithSameSlug = await this.eventRepository.findBySlug(slug)
 
     if(eventWithSameSlug) {
-      throw new EventAlreadyExistsError
+      throw new EventAlreadyExistsError()
     }
 
     const event = await this.eventRepository.create({
