@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
+import { GetAttendeeBadgeController } from "./GetAttendeeBadgeController";
 import { RegisterController } from "./RegisterController";
 
 export async function attendeeRoutes(app: FastifyInstance) {
@@ -39,4 +40,35 @@ export async function attendeeRoutes(app: FastifyInstance) {
       },
       RegisterController
     )
+
+  app
+    .withTypeProvider<ZodTypeProvider>()
+    .get(
+      '/attendees/:id',
+      {
+        schema: {
+          params: z.object({
+            id: z.coerce.number().int().positive()
+          }),
+          response: {
+            200: z.object({
+              attendee: z.object({
+                id: z.number().int().positive(),
+                name: z.string(),
+                email: z.string().email(),
+                eventId: z.string().uuid(),
+                createdAt: z.date(),
+                event: z.object({
+                  title: z.string()
+                })
+              })
+            }),
+            404: z.object({
+              message: z.string()
+            })
+          }
+        }
+      },
+      GetAttendeeBadgeController
+      )
 }
