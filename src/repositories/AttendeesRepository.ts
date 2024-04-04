@@ -1,6 +1,6 @@
 import { Attendee, Prisma } from "@prisma/client";
 import { prisma } from "../libs/prisma";
-import { IAttendeesRepository } from "./interfaces/IAttendeesRepository";
+import { IAttendeesRepository, IFindByIdParamsResponse } from "./interfaces/IAttendeesRepository";
 
 export class AttendeesRepository implements IAttendeesRepository {
   async create({ email, eventId, name }: Prisma.AttendeeUncheckedCreateInput): Promise<Attendee> {
@@ -37,6 +37,29 @@ export class AttendeesRepository implements IAttendeesRepository {
 
     return quantity
   }
+
+  async findById(id: number): Promise<IFindByIdParamsResponse | null> {
+    const attendee = await prisma.attendee.findUnique({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        eventId: true,
+        event: {
+          select: {
+            title: true
+          }
+        }
+      },
+      where: {
+        id
+      }
+    })
+
+    return attendee
+  }
+
 
 
 }
