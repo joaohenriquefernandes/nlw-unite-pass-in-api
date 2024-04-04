@@ -25,4 +25,14 @@ export class EventsRepository implements IEventsRepository {
 
     return event
   }
+
+  async findById(id: string): Promise<Event | null> {
+    const event = await prisma.event.findUnique({
+      where: {
+        id
+      }
+    })
+
+    return event
+  }
 }
