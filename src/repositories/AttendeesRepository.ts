@@ -14,4 +14,29 @@ export class AttendeesRepository implements IAttendeesRepository {
 
     return attendee
   }
+
+  async findByEmail(email: string, eventId: string): Promise<Attendee | null> {
+    const attendee = await prisma.attendee.findUnique({
+      where: {
+        eventId_email: {
+          email,
+          eventId
+        }
+      }
+    })
+
+    return attendee
+  }
+
+  async countByEvent(eventId: string): Promise<number> {
+    const quantity = await prisma.attendee.count({
+      where: {
+        eventId
+      }
+    })
+
+    return quantity
+  }
+
+
 }
