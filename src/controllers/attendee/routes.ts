@@ -7,7 +7,7 @@ export async function attendeeRoutes(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .post(
-      'events/:eventId/attendees',
+      '/events/:eventId/attendees',
       {
         schema: {
           params: z.object({
@@ -21,12 +21,18 @@ export async function attendeeRoutes(app: FastifyInstance) {
           response: {
             201: z.object({
               attendee: z.object({
-                id: z.string().uuid(),
+                id: z.number().int().positive(),
                 name: z.string(),
                 email: z.string().email(),
-                createdAt: z.string().datetime(),
+                createdAt: z.date(),
                 eventId: z.string().uuid()
               })
+            }),
+            400: z.object({
+              message: z.string()
+            }),
+            404: z.object({
+              message: z.string()
             })
           }
         }
