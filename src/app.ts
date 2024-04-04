@@ -1,6 +1,7 @@
 import fastify from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import { ZodError } from "zod";
+import { attendeeRoutes } from "./controllers/attendee/routes";
 import { eventRoutes } from "./controllers/event/routes";
 import { env } from "./env";
 
@@ -10,6 +11,7 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 app.register(eventRoutes)
+app.register(attendeeRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
