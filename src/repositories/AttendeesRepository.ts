@@ -1,6 +1,6 @@
 import { Attendee, Prisma } from "@prisma/client";
 import { prisma } from "../libs/prisma";
-import { IAttendeesRepository, IFindByIdParamsResponse } from "./interfaces/IAttendeesRepository";
+import { IAttendeesRepository, IFindByIdParamsResponse, IFindManyByEventIdParamsResponse } from "./interfaces/IAttendeesRepository";
 
 export class AttendeesRepository implements IAttendeesRepository {
   async create({ email, eventId, name }: Prisma.AttendeeUncheckedCreateInput): Promise<Attendee> {
@@ -60,6 +60,34 @@ export class AttendeesRepository implements IAttendeesRepository {
     return attendee
   }
 
+  async findManyByEventId(eventId: string, pageIndex: number, query?: string): Promise<IFindManyByEventIdParamsResponse[]> {
+    const attendees = await prisma.attendee.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        checkIn: {
+          select: {
+            createdAt: true
+          }
+        }
+      },
+      where: query ? {
+        eventId,
+        name: {
+          contains: query
+        }
+      } : {
+        eventId
+      },
+      take: 10,
+      skip: pageIndex * 10,
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
 
-
+    return attendees
+  }
 }
