@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { GetAttendeeBadgeController } from "./GetAttendeeBadgeController";
+import { GetEventAttendeesController } from "./GetEventAttendeesController";
 import { RegisterController } from "./RegisterController";
 
 export async function attendeeRoutes(app: FastifyInstance) {
@@ -52,15 +53,18 @@ export async function attendeeRoutes(app: FastifyInstance) {
           }),
           response: {
             200: z.object({
-              attendee: z.object({
-                id: z.number().int().positive(),
-                name: z.string(),
-                email: z.string().email(),
-                eventId: z.string().uuid(),
-                createdAt: z.date(),
-                event: z.object({
-                  title: z.string()
-                })
+              badge: z.object({
+                attendee: z.object({
+                  id: z.number().int().positive(),
+                  name: z.string(),
+                  email: z.string().email(),
+                  eventId: z.string().uuid(),
+                  createdAt: z.date(),
+                  event: z.object({
+                    title: z.string()
+                  })
+                }),
+                checkInURL: z.string().url()
               })
             }),
             404: z.object({
@@ -71,4 +75,37 @@ export async function attendeeRoutes(app: FastifyInstance) {
       },
       GetAttendeeBadgeController
       )
+
+  app
+    .withTypeProvider<ZodTypeProvider>()
+    .get(
+      '/events/:eventId/attendees',
+      {
+        schema: {
+          params: z.object({
+            eventId: z.string().uuid()
+          }),
+          querystring: z.object({
+            pageIndex: z.coerce.number().int().default(0),
+            query: z.string().nullish()
+          }),
+          response: {
+            200: z.object({
+              attendees: z.array(
+                z.object({
+                    id: z.number().int().positive(),
+                    name: z.string(),
+                    email: z.string().email(),
+                    createdAt: z.date(),
+                    checkIn: z.object({
+                      createdAt: z.date().optional()
+                    }).nullish()
+                })
+              )
+            })
+          }
+        }
+      },
+      GetEventAttendeesController
+    )
 }
