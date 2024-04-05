@@ -11,12 +11,14 @@ interface IGetAttendeeBadgeControllerRequest extends RequestGenericInterface {
 export async function GetAttendeeBadgeController(request: FastifyRequest<IGetAttendeeBadgeControllerRequest>, reply: FastifyReply) {
   const { id } = request.params
 
+  const baseURL = `${request.protocol}://${request.hostname}`
+
   const getAttendeeBadgeService = makeGetAttendeesBadgeService()
 
   try {
-    const { attendee } = await getAttendeeBadgeService.execute({ id })
+    const { badge } = await getAttendeeBadgeService.execute({ id, baseURL })
 
-    return reply.status(200).send({ attendee })
+    return reply.status(200).send({ badge })
   } catch (error) {
     if(error instanceof AttendeeNotFoundError) {
       return reply.status(404).send({ message: error.message })
