@@ -10,6 +10,8 @@ export async function checkInsRoutes(app: FastifyInstance) {
       '/attendees/:attendeeId/check-in',
       {
         schema: {
+          summary: 'Get an check-in',
+          tags: ['check-ins'],
           params: z.object({
             attendeeId: z.coerce.number().int().positive()
           }),

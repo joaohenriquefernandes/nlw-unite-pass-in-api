@@ -11,6 +11,8 @@ export async function eventRoutes(app: FastifyInstance) {
       '/events',
       {
         schema: {
+          summary: 'Create an event',
+          tags: ['events'],
           body: z.object({
             title: z.string().min(4),
             details: z.string().nullable(),
@@ -39,6 +41,8 @@ export async function eventRoutes(app: FastifyInstance) {
     .get('/events/:id',
     {
       schema: {
+        summary: 'Get an event',
+        tags: ['events'],
         params: z.object({
           id: z.string().uuid()
         }),

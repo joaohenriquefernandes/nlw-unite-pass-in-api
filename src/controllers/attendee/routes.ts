@@ -12,6 +12,8 @@ export async function attendeeRoutes(app: FastifyInstance) {
       '/events/:eventId/attendees',
       {
         schema: {
+          summary: 'Register an attendee',
+          tags: ['attendees'],
           params: z.object({
             eventId: z.string().uuid()
           }),
@@ -48,6 +50,8 @@ export async function attendeeRoutes(app: FastifyInstance) {
       '/attendees/:id',
       {
         schema: {
+          summary: 'Get an attendee badge',
+          tags: ['attendees'],
           params: z.object({
             id: z.coerce.number().int().positive()
           }),
@@ -82,6 +86,8 @@ export async function attendeeRoutes(app: FastifyInstance) {
       '/events/:eventId/attendees',
       {
         schema: {
+          summary: 'Get event attendees',
+          tags: ['attendees'],
           params: z.object({
             eventId: z.string().uuid()
           }),
