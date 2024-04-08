@@ -1,5 +1,4 @@
-import { AttendeesRepository } from "../repositories/AttendeesRepository";
-import { IFindByIdParamsResponse } from "../repositories/interfaces/IAttendeesRepository";
+import { IAttendeesRepository, IFindByIdParamsResponse } from "../repositories/interfaces/IAttendeesRepository";
 import { AttendeeNotFoundError } from "./errors/AttendeeNotFoundError";
 
 interface IGetAttendeesBadgeServiceRequest {
@@ -15,7 +14,7 @@ interface IGetAttendeesBadgeServiceResponse {
 }
 
 export class GetAttendeesBadgeService {
-  constructor(private attendeesRepository: AttendeesRepository){}
+  constructor(private attendeesRepository: IAttendeesRepository){}
 
   async execute({ id, baseURL }: IGetAttendeesBadgeServiceRequest): Promise<IGetAttendeesBadgeServiceResponse> {
     const attendee = await this.attendeesRepository.findById(id)
