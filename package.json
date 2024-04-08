@@ -8,7 +8,8 @@
     "build": "tsup src --format esm",
     "start": "node dist/server.mjs",
     "db:migrate": "prima migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "test": "vitest run --dir src/services"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,8 @@
     "prisma": "^5.11.0",
     "tsup": "^8.0.2",
     "tsx": "^4.7.1",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "vitest": "^1.4.0"
   },
   "dependencies": {
     "@fastify/cors": "^9.0.1",
