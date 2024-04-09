@@ -1,9 +1,10 @@
-import { Attendee, Event, Prisma } from "@prisma/client";
+import { Attendee, CheckIn, Event, Prisma } from "@prisma/client";
 import { IAttendeesRepository, IFindByIdParamsResponse, IFindManyByEventIdParamsResponse } from "../interfaces/IAttendeesRepository";
 
 export class InMemoryAttendeesRepository implements IAttendeesRepository{
   public items: Attendee[] = []
   public events: Event[] = []
+  public checkIns: CheckIn[] = []
 
   async create({ id, email, eventId, name }: Prisma.AttendeeUncheckedCreateInput): Promise<Attendee> {
     const attendee = {
@@ -34,22 +35,12 @@ export class InMemoryAttendeesRepository implements IAttendeesRepository{
       return null
     }
 
-    this.events.push(
-      {
-        id: data.eventId,
-        title: "NLW Unite",
-        slug: "nlw-unite",
-        details: null,
-        maximumAttendees: null
-      }
-    )
-
-    const { title } = this.events[0]
+    const eventData = this.events.find((item) => item.id === data.eventId)
 
     return {
       ...data,
       event: {
-        title
+        title: eventData!.title
       }
     }
   }
@@ -58,7 +49,7 @@ export class InMemoryAttendeesRepository implements IAttendeesRepository{
     const data = this.items.filter((item) => item.eventId === eventId)
 
     const checkIns = data.map((item) => {
-      const checkIn = this.checkIns.items.find((checkIn) => checkIn.attendeeId === item.id)
+      const checkIn = this.checkIns.find((checkIn) => checkIn.attendeeId === item.id)
 
       return {
         id: item.id,
